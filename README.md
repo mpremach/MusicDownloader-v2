@@ -1,6 +1,7 @@
 # Music Downloader
 Created by: https://github.com/mpremach
 A Python program to download music from YouTube or SoundCloud, convert it to MP3, add metadata, and optionally attach album covers.
+![Music Downloader Demo](assets/demo.gif)
 
 # Features
 
