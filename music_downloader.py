@@ -151,6 +151,7 @@ ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
 app = ctk.CTk()
 app.title("Music Downloader v2")
+app.iconbitmap(os.path.join(BASE_DIR, "downloading.ico"))
 app.geometry("550x800") 
 
 # Header & URL 

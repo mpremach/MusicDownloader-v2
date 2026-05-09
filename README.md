@@ -55,4 +55,4 @@ IMPORTANT: With how youtube works its possible the downloader stops working with
 3. Run virtual enviornment (.\.venv\Scripts\activate)
 4. pip install -r requirements.txt
 5. Update yt_dlp (pip install --upgrade yt-dlp)
-6. Bundle as .exe (pyinstaller --onefile --noconsole --add-data "ffmpeg;ffmpeg" --icon="downloading.ico" music_downloader.py)
+6. Bundle as .exe (pyinstaller --onefile --noconsole --add-data "ffmpeg;ffmpeg" --add-data "downloading.ico;." --icon="downloading.ico" music_downloader.py)
