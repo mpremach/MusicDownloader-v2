@@ -1,3 +1,5 @@
 yt-dlp
 pydub
 mutagen
+customtkinter
+Pillow
