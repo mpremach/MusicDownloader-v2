@@ -10,9 +10,9 @@ For easiest use download the newest version located in releases!
 ![Latest Version](https://img.shields.io/github/v/release/mpremach/MusicDownloader-v2?label=Latest%20Version&color=orange)
 
 # Features
-
+-GUI for ease of use.
 - Download audio from YouTube or SoundCloud.
-- Convert downloaded audio to MP3 using `pydub`.
+- Convert downloaded audio to MP3 using `ffmpeg`.
 - Add metadata: title, artist, album, year.
 - Choose an album cover from a `Covers` folder.
 - Works on Windows (requires `ffmpeg`).
@@ -23,7 +23,7 @@ This program also requires ffmpeg, see download intructions below.
 For new users upon installation the program must be ran at least once to create the required folders. After inital run program can be used freely. If you wish to use covers make sure to add images to the covers folder before converting music to see the cover options. 
 
 If you wish to make changes and rebundle as .exe use 
-Bundle as .exe (pyinstaller --onefile --noconsole --add-data "ffmpeg;ffmpeg" --icon="downloading.ico" music_downloader.py)
+Bundle as .exe (pyinstaller --onefile --noconsole --add-data "ffmpeg;ffmpeg" --add-data "downloading.ico;." --icon="downloading.ico" music_downloader.py)
 
 
 # ffmpeg
