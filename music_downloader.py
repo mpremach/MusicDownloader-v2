@@ -154,13 +154,18 @@ app.title("Music Downloader v2")
 app.iconbitmap(os.path.join(BASE_DIR, "downloading.ico"))
 app.geometry("550x800") 
 
+# Scrollable Frame
+scrollable_frame = ctk.CTkScrollableFrame(app, fg_color="transparent")
+scrollable_frame.pack(fill="both", expand=True)
+
+
 # Header & URL 
-ctk.CTkLabel(app, text="🎵 Music Downloader", font=("Arial", 22, "bold")).pack(pady=(20, 10))
-url_entry = ctk.CTkEntry(app, width=450, height=35, placeholder_text="Paste YouTube or SoundCloud URL here...")
+ctk.CTkLabel(scrollable_frame, text="🎵 Music Downloader", font=("Arial", 22, "bold")).pack(pady=(20, 10))
+url_entry = ctk.CTkEntry(scrollable_frame, width=450, height=35, placeholder_text="Paste YouTube or SoundCloud URL here...")
 url_entry.pack(pady=(0, 20))
 
 #  Metadata Card 
-meta_frame = ctk.CTkFrame(app, corner_radius=10)
+meta_frame = ctk.CTkFrame(scrollable_frame, corner_radius=10)
 meta_frame.pack(pady=10, padx=25, fill="x")
 
 ctk.CTkLabel(meta_frame, text="Metadata (Optional)", font=("Arial", 14, "bold")).pack(pady=(10, 5))
@@ -181,7 +186,7 @@ year_entry = ctk.CTkEntry(grid_frame, width=220, placeholder_text="Year")
 year_entry.grid(row=1, column=1, padx=10, pady=10)
 
 # Cover Art & Download Button
-cover_frame = ctk.CTkFrame(app, fg_color="transparent")
+cover_frame = ctk.CTkFrame(scrollable_frame, fg_color="transparent")
 cover_frame.pack(pady=15, fill="x", padx=25)
 
 # Cover Art Preview
@@ -200,7 +205,7 @@ download_btn = ctk.CTkButton(cover_frame, text="Download & Convert", command=sta
 download_btn.pack(pady=(15,0))
 
 # Status Label 
-status_label = ctk.CTkLabel(app, text="Ready", text_color="gray", font=("Arial", 12))
+status_label = ctk.CTkLabel(scrollable_frame, text="Ready", text_color="gray", font=("Arial", 12))
 status_label.pack(pady=(10, 0))
 
 if __name__ == "__main__":
