@@ -5,7 +5,7 @@ A Python program to download music from YouTube or SoundCloud, convert it to MP3
 For easiest use download the newest version located in releases!
 
 
-![Music Downloader Demo](assets/music_downloader.gif)
+![Music Downloader Demo](assets/music_downloader_demo.gif)
 ![Total Downloads](https://img.shields.io/github/downloads/mpremach/MusicDownloader-v2/total?color=blue&label=Downloads)
 ![Latest Version](https://img.shields.io/github/v/release/mpremach/MusicDownloader-v2?label=Latest%20Version&color=orange)
 
