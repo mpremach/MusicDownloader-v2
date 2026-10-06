@@ -8,7 +8,7 @@ from yt_dlp import YoutubeDL  # For downloading audio from YouTube/SoundCloud
 from mutagen.easyid3 import EasyID3  # For editing mp3 metadata
 from mutagen.id3 import ID3, APIC, error  # For adding album art to mp3
 import customtkinter as ctk  # For creating the GUI
-from PIL import Image  # For handling album cover images
+from PIL import Image, ImageGrab  # For handling album cover images
 
 # Setup FFmpeg/FFprobe paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Current script directory
@@ -39,7 +39,15 @@ def download_audio():
         'format': 'bestaudio/best',  # Get best quality audio
         'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),  # Save template (title, file type)
         'noplaylist': True,  # Only download single videos even if URL is a playlist
+        # Tells yt-dlp to use the Android app client (faster & bypasses 403)
+        'extractor_args': {
+            'youtube': {
+                'player_client': ['android', 'ios']
+            }
+        }
     }
+
+    success = False
 
     try:
         with YoutubeDL(ydl_opts) as ydl:
@@ -59,12 +67,26 @@ def download_audio():
             choose_cover(mp3_filename)  # Allow user to choose a cover for the mp3 file
             status_label.configure(text="Process Complete! Ready for next URL.", text_color="green")
             print("\nProcess complete.")
+            success = True
     except Exception as e:
         status_label.configure(text=f"Error: {str(e)[:60]}", text_color="red")
         print(f"An error occurred: {e}")
     finally:
-        download_btn.configure(state='normal')  # Re-enable the download button after process is complete
+        # Delete temporary pasted image if it exists
+        temp_paste = os.path.join(COVERS_FOLDER, "temp_paste.jpg")
+        if os.path.exists(temp_paste):
+            os.remove(temp_paste)
             
+        # Refresh dropdown back to normal files
+        available_covers = ["None"] + [f for f in os.listdir(COVERS_FOLDER) if os.path.isfile(os.path.join(COVERS_FOLDER, f))]
+        cover_dropdown.configure(values=available_covers)
+        cover_dropdown.set("None")
+        
+        download_btn.configure(state='normal')  # Re-enable the download button
+
+        # Auto terminate if checked
+        if success and auto_close_var.get() == "on":
+            app.after(1000, app.destroy)
 
 #Function to allow for choosing a cover
 def choose_cover(mp3_file):
@@ -89,7 +111,7 @@ def choose_cover(mp3_file):
             audio.save()
             print("Cover added to mp3 file.")
     except Exception as e:
-        print("Error adding cover: {e}")
+        print(f"Error adding cover: {e}")
 
 # Function to add metadata to mp3 file
 def add_metadata(mp3_file):
@@ -146,6 +168,31 @@ def update_cover_preview(choice):
         print(f"Preview error: {e}")
 
 
+def paste_cover():
+    try:
+        img = ImageGrab.grabclipboard()
+        if isinstance(img, Image.Image):
+            if img.mode != 'RGB':
+                img = img.convert('RGB')
+            
+            # Save temporarily to covers folder
+            temp_path = os.path.join(COVERS_FOLDER, "temp_paste.jpg")
+            img.save(temp_path, "JPEG")
+            
+            # Update dropdown and selection
+            available_covers = ["None"] + [f for f in os.listdir(COVERS_FOLDER) if os.path.isfile(os.path.join(COVERS_FOLDER, f))]
+            cover_dropdown.configure(values=available_covers)
+            cover_dropdown.set("temp_paste.jpg")
+            
+            update_cover_preview("temp_paste.jpg")
+            status_label.configure(text="Pasted image ready!", text_color="green")
+        else:
+            status_label.configure(text="No image found in clipboard.", text_color="red")
+    except Exception as e:
+        status_label.configure(text="Error pasting image.", text_color="red")
+        print(f"Paste error: {e}")
+
+
 # GUI Setup
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
@@ -200,9 +247,24 @@ available_covers = ["None"] + [f for f in os.listdir(COVERS_FOLDER) if os.path.i
 cover_dropdown = ctk.CTkOptionMenu(cover_frame, values=available_covers, command=update_cover_preview, width=200)
 cover_dropdown.pack(pady=(15, 0))
 
+paste_btn = ctk.CTkButton(cover_frame, text="📋 Paste from Clipboard", command=paste_cover, fg_color="gray")
+paste_btn.pack(pady=(10, 5))
+
 # Action Button
 download_btn = ctk.CTkButton(cover_frame, text="Download & Convert", command=start_download_thread, height=40, font=("Arial", 12, "bold"))
 download_btn.pack(pady=(15,0))
+
+# Auto-Close Checkbox
+auto_close_var = ctk.StringVar(value="off")
+
+auto_close_cb = ctk.CTkCheckBox(
+    cover_frame, 
+    text="Close app after download", 
+    variable=auto_close_var, 
+    onvalue="on", 
+    offvalue="off"
+)
+auto_close_cb.pack(pady=(10, 5))
 
 # Status Label 
 status_label = ctk.CTkLabel(scrollable_frame, text="Ready", text_color="gray", font=("Arial", 12))
